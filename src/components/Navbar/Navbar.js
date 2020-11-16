@@ -1,12 +1,13 @@
+import { withRouter } from "react-router-dom"
 import { Menubar } from "primereact/menubar";
 
-const Navbar = () => {
+const Navbar = (props) => {
     const items = [
-        { label: "Контрагенты", icon: "pi pi-fw pi-users" },
+        { label: "Контрагенты", icon: "pi pi-fw pi-users", command: () => { props.history.push("/contractors/") } },
         {
             label: "Справочники", icon: "pi pi-fw pi-briefcase", items: [
-                { label: "Правовые формы" },
-                { label: "Сроки оплат" }
+                { label: "Правовые формы", command: () => { props.history.push("/catalogs/company-types/") } },
+                { label: "Сроки оплат", command: () => { props.history.push("/catalogs/payment-terms/") } }
             ]
         }
     ]
@@ -15,4 +16,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar
+export default withRouter(Navbar)
