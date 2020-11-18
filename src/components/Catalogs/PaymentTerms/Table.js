@@ -8,6 +8,11 @@ import { selectPaymentTerm } from "../../../redux/actions/paymentTermsActions";
 const PaymentTermsTable = (props) => {
     const { data, show, selectPaymentTerm } = props
 
+    const onEdit = (rowData) => {
+        selectPaymentTerm(rowData)
+        show("PaymentTermFormDialog", { dialogType: "edit" })
+    }
+
     const onDelete = (rowData) => {
         selectPaymentTerm(rowData)
         show("PaymentTermDeleteDialog", { item: rowData })
@@ -16,7 +21,7 @@ const PaymentTermsTable = (props) => {
     const actionBodyTemplate = (rowData) => (
         <>
             <Button label="Редактировать" icon="pi pi-pencil" className="p-button-sm p-button-warning"
-                    onClick={ () => {} }/>
+                    onClick={ () => onEdit(rowData) }/>
             <Button label="Удалить" icon="pi pi-trash" className="p-button-sm p-button-danger p-ml-2"
                     onClick={ () => onDelete(rowData) }/>
         </>

@@ -10,7 +10,7 @@ const CompanyTypesTable = (props) => {
 
     const onEdit = (item) => {
         props.selectCompanyType(item)
-        show("CompanyTypeFormDialog", { dialogType: "edit" })
+        show("CompanyTypeFormDialog")
     }
 
     const onDelete = (item) => {

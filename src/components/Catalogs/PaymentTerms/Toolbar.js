@@ -7,7 +7,7 @@ const PaymentTypesToolbar = (props) => {
     const { show } = props
 
     const onAdd = () => {
-        show("PaymentTypeFormDialog")
+        show("PaymentTermFormDialog")
     }
 
     const left = (

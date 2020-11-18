@@ -1,32 +1,36 @@
-import { useEffect } from "react"
+import { Component } from "react"
 import MainLayout from "../../MainLayout/MainLayout";
 import PaymentTypesToolbar from "./Toolbar";
 import PaymentTermsTable from "./Table";
 import { connect } from "react-redux";
 import { fetchAllPaymentTerms } from "../../../redux/actions/paymentTermsActions";
 import PaymentTermDeleteDialog from "./DeleteDialog";
+import PaymentTermForm from "./Form";
 
-const PaymentTerms = (props) => {
-    const { fetchAllPaymentTerms, deleteModal } = props
-    const title = "Справочник сроков оплат"
+class PaymentTerms extends Component {
+    state = { title: "Справочник сроков оплат" }
 
-    useEffect(() => {
-        document.title = title
-        fetchAllPaymentTerms()
-    }, [])
+    componentDidMount() {
+        document.title = this.state.title
+        this.props.fetchAllPaymentTerms()
+    }
 
-    return (
-        <MainLayout title={ title }>
-            <PaymentTypesToolbar/>
-            <PaymentTermsTable data={ props.paymentTermsList }/>
-            { deleteModal && <PaymentTermDeleteDialog/> }
-        </MainLayout>
-    )
+    render() {
+        return (
+            <MainLayout title={ this.state.title }>
+                <PaymentTypesToolbar/>
+                <PaymentTermsTable data={ this.props.paymentTermsList }/>
+                { this.props.formModal && <PaymentTermForm/> }
+                { this.props.deleteModal && <PaymentTermDeleteDialog/> }
+            </MainLayout>
+        )
+    }
 }
 
 const mapStateToProps = (state) => ({
     paymentTermsList: state.paymentTerms.paymentTermsList,
-    deleteModal: state.modal.PaymentTermDeleteDialog
+    formModal: state.modal.PaymentTermFormDialog,
+    deleteModal: state.modal.PaymentTermDeleteDialog,
 })
 
 export default connect(mapStateToProps, { fetchAllPaymentTerms })(PaymentTerms)
