@@ -1,4 +1,9 @@
-import { GET_ALL_COMPANY_TYPES_SUCCESS } from "../actions/companyTypesActions";
+import {
+    COMPANY_TYPE_SELECTED,
+    GET_ALL_COMPANY_TYPES_SUCCESS,
+    COMPANY_TYPE_CLEARED,
+    UPDATE_COMPANY_TYPE_SUCCESS, CREATE_COMPANY_TYPES_SUCCESS
+} from "../actions/companyTypesActions";
 
 const initialState = {
     companyTypesList: [],
@@ -12,6 +17,30 @@ export const companyTypesReducer = (state = initialState, { type, payload }) => 
                 ...state,
                 companyTypesList: payload
             }
-        default: return state
+        case COMPANY_TYPE_SELECTED:
+            return {
+                ...state,
+                selectedItem: payload
+            }
+        case COMPANY_TYPE_CLEARED:
+            return {
+                ...state,
+                selectedItem: initialState.selectedItem
+            }
+        case CREATE_COMPANY_TYPES_SUCCESS:
+            return {
+                ...state,
+                companyTypesList: [
+                    ...state.companyTypesList,
+                    payload
+                ]
+            }
+        case UPDATE_COMPANY_TYPE_SUCCESS:
+            return {
+                ...state,
+                companyTypesList: state.companyTypesList.map(item => item.id === payload.id ? { ...payload } : item)
+            }
+        default:
+            return state
     }
 }
