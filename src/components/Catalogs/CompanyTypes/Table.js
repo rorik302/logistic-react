@@ -10,11 +10,12 @@ const CompanyTypesTable = (props) => {
 
     const onEdit = (item) => {
         props.selectCompanyType(item)
-        show("CompanyTypeFormDialog", { dialogType: "edit"})
+        show("CompanyTypeFormDialog", { dialogType: "edit" })
     }
 
     const onDelete = (item) => {
-        console.log("handleDelete")
+        props.selectCompanyType(item)
+        show("CompanyTypeDeleteDialog", { item: item })
     }
 
     const actionBodyTemplate = (rowData) => (

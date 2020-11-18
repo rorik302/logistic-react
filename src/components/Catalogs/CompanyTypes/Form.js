@@ -61,7 +61,7 @@ const Form = (props) => {
             </div>
             <div className="p-d-flex p-jc-end">
                 <Button type="submit" label="Сохранить" icon="pi pi-check" className="p-button-sm p-button-success"/>
-                <Button type="button" label="Отмена" icon="pi pi-cancel"
+                <Button type="button" label="Отмена" icon="pi pi-ban"
                         className="p-button-sm p-button-text p-button-plain p-ml-2"
                         onClick={ handleHide }/>
             </div>

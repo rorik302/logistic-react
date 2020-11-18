@@ -1,4 +1,4 @@
-import { fetchAllCompanyTypes, saveCompanyType } from "../../services/companyTypesService";
+import { fetchAllCompanyTypes, saveCompanyType, deleteCompanyType } from "../../services/companyTypesService";
 
 export const GET_ALL_COMPANY_TYPES_REQUEST = "GET_ALL_COMPANY_TYPES_REQUEST"
 export const GET_ALL_COMPANY_TYPES_SUCCESS = "GET_ALL_COMPANY_TYPES_SUCCESS"
@@ -18,7 +18,7 @@ export const createCompanyTypeSuccess = (payload) => ({ type: CREATE_COMPANY_TYP
 export const updateCompanyTypeRequest = () => ({ type: UPDATE_COMPANY_TYPE_REQUEST })
 export const updateCompanyTypeSuccess = (payload) => ({ type: UPDATE_COMPANY_TYPE_SUCCESS, payload })
 export const deleteCompanyTypeRequest = () => ({ type: DELETE_COMPANY_TYPES_REQUEST })
-export const deleteCompanyTypeSuccess = () => ({ type: DELETE_COMPANY_TYPES_SUCCESS })
+export const deleteCompanyTypeSuccess = (payload) => ({ type: DELETE_COMPANY_TYPES_SUCCESS, payload })
 export const companyTypeSelected = (payload) => ({ type: COMPANY_TYPE_SELECTED, payload })
 export const clearCompanyType = () => dispatch => dispatch({ type: COMPANY_TYPE_CLEARED })
 
@@ -50,4 +50,10 @@ export const submitCompanyType = (values) => (dispatch) => {
     } else {
         dispatch(createCompanyType(values))
     }
+}
+
+export const removeCompanyType = (item) => (dispatch) => {
+    dispatch(deleteCompanyTypeRequest())
+    deleteCompanyType(item)
+        .then(() => dispatch(deleteCompanyTypeSuccess(item)))
 }

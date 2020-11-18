@@ -1,4 +1,4 @@
-import { getDataFromUrl, saveDataToUrl } from "./index";
+import { deleteData, getDataFromUrl, saveDataToUrl } from "./index";
 
 export const fetchAllCompanyTypes = async () => {
     return await getDataFromUrl("catalogs/types-of-companies/")
@@ -8,6 +8,10 @@ export const fetchAllCompanyTypes = async () => {
 export const saveCompanyType = async (type) => {
     return await saveDataToUrl("catalogs/types-of-companies/", transformTypeFrontToBack(type))
         .then(res => transformTypeBackToFront(res.data))
+}
+
+export const deleteCompanyType = async (item) => {
+    return await deleteData(`catalogs/types-of-companies/${item.id}/`)
 }
 
 const transformTypeBackToFront = (type) => {

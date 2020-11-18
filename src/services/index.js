@@ -12,3 +12,6 @@ export const saveDataToUrl = async (url, data) => {
         data: data
     }))
 }
+export const deleteData = async (url) => {
+    return await axios.delete(`${BASE_URL}${url}`)
+}
