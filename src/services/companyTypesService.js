@@ -22,7 +22,7 @@ export const transformTypeBackToFront = (type) => {
     }
 }
 
-const transformTypeFrontToBack = (type) => {
+export const transformTypeFrontToBack = (type) => {
     return {
         id: type.id,
         name_short: type.nameShort,

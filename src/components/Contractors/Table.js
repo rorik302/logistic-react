@@ -8,7 +8,9 @@ import { select } from "../../redux/actions/contractorsActions";
 const ContractorsTable = (props) => {
     const { data, show, select } = props
 
-    const onEdit = () => {
+    const onEdit = (rowData) => {
+        select(rowData)
+        show("ContractorFormDialog", { dialogType: "edit" })
     }
     const onDelete = (rowData) => {
         select(rowData)

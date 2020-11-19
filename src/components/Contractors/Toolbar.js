@@ -1,9 +1,13 @@
 import { Toolbar } from "primereact/toolbar";
 import { Button } from "primereact/button";
+import { connect } from "react-redux";
+import { show } from "redux-modal";
 
-const ContractorsToolbar = () => {
+const ContractorsToolbar = (props) => {
+    const { show } = props
+
     const onAdd = () => {
-
+        show("ContractorFormDialog")
     }
 
     const left = (
@@ -15,4 +19,4 @@ const ContractorsToolbar = () => {
     )
 }
 
-export default ContractorsToolbar
+export default connect(null, { show })(ContractorsToolbar)

@@ -6,6 +6,7 @@ export const getDataFromUrl = async (url) => await axios(`${ BASE_URL }${ url }`
 export const saveDataToUrl = async (url, data) => {
     const method = data.id ? "PUT" : "POST"
     const newUrl = data.id ? `${ BASE_URL }${ url }${ data.id }/` : `${ BASE_URL }${ url }`
+    console.log(data)
     return (await axios({
         method: method,
         url: newUrl,
