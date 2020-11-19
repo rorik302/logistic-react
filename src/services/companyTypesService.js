@@ -14,7 +14,7 @@ export const deleteCompanyType = async (item) => {
     return await deleteData(`catalogs/types-of-companies/${item.id}/`)
 }
 
-const transformTypeBackToFront = (type) => {
+export const transformTypeBackToFront = (type) => {
     return {
         id: type.id,
         nameShort: type.name_short,
