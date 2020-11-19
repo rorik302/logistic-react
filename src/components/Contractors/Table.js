@@ -1,13 +1,18 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
+import { show } from "redux-modal";
+import { connect } from "react-redux";
+import { select } from "../../redux/actions/contractorsActions";
 
 const ContractorsTable = (props) => {
-    const { data } = props
+    const { data, show, select } = props
 
     const onEdit = () => {
     }
-    const onDelete = () => {
+    const onDelete = (rowData) => {
+        select(rowData)
+        show("ContractorDeleteDialog", { item: rowData })
     }
 
     const isCustomerBodyTemplate = (rowData) => {
@@ -37,4 +42,4 @@ const ContractorsTable = (props) => {
     )
 }
 
-export default ContractorsTable
+export default connect(null, { show, select })(ContractorsTable)

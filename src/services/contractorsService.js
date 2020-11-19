@@ -1,4 +1,4 @@
-import { getDataFromUrl } from "./index";
+import { deleteData, getDataFromUrl } from "./index";
 import { transformTypeBackToFront as companyTypesTransformBackToFront } from "./companyTypesService";
 
 const url = "companies/"
@@ -6,6 +6,10 @@ const url = "companies/"
 export const fetchAllContractors = async () => {
     return await getDataFromUrl(url)
         .then(res => res.data.map(item => transpormBackToFront(item)))
+}
+
+export const deleteContractor = async (item) => {
+    return await deleteData(`${url}${item.id}/`)
 }
 
 const transpormBackToFront = (item) => {

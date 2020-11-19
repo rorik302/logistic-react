@@ -4,9 +4,10 @@ import ContractorsToolbar from "./Toolbar";
 import ContractorsTable from "./Table";
 import { fetchAll } from "../../redux/actions/contractorsActions";
 import { connect } from "react-redux";
+import ContractorDeleteDialog from "./DeleteDialog";
 
 const Contractors = (props) => {
-    const { fetchAll, contractorsList } = props
+    const { fetchAll, contractorsList, deleteDialog } = props
     const title = "Контрагенты"
 
     useEffect(() => {
@@ -18,12 +19,14 @@ const Contractors = (props) => {
         <MainLayout title={ title }>
             <ContractorsToolbar/>
             <ContractorsTable data={ contractorsList }/>
+            { deleteDialog && <ContractorDeleteDialog/>}
         </MainLayout>
     )
 }
 
 const mapStateToProps = (state) => ({
-    contractorsList: state.contractors.contractorsList
+    contractorsList: state.contractors.contractorsList,
+    deleteDialog: state.modal.ContractorDeleteDialog
 })
 
 export default connect(mapStateToProps, { fetchAll })(Contractors)
