@@ -3,7 +3,7 @@ import { Button, Col, DatePicker, Form, Input, Modal, Row, Select } from "antd";
 import moment from "moment";
 import { connect } from "react-redux";
 import { closeFormModal } from "../../redux/actions/modalsActions";
-import { clearSelectedRequest } from "../../redux/actions/requestsActions";
+import { clearSelectedRequest, saveRequest } from "../../redux/actions/requestsActions";
 
 const { Option } = Select
 
@@ -11,7 +11,7 @@ const RequestModalForm = (props) => {
     const [customers, setCustomers] = useState([])
     const [transporters, setTransporters] = useState([])
 
-    const { visible, initialData, closeFormModal, clearSelectedRequest, title } = props
+    const { visible, initialData, closeFormModal, clearSelectedRequest, title, saveRequest } = props
 
     useEffect(() => {
         fetch("http://localhost:8000/api/companies/")
@@ -22,6 +22,12 @@ const RequestModalForm = (props) => {
                 }
             )
     }, [])
+
+    const handleSubmit = values => {
+        saveRequest(values)
+        clearSelectedRequest()
+        closeFormModal()
+    }
 
     const onModalClose = () => {
         clearSelectedRequest()
@@ -35,16 +41,10 @@ const RequestModalForm = (props) => {
             closable={ false }
             visible={ visible }
             style={ { minWidth: "700px" } }
-            footer={ [
-                <Button key="submit" type="primary">
-                    Сохранить
-                </Button>,
-                <Button key="cancel" onClick={ () => onModalClose() }>
-                    Отмена
-                </Button>
-            ] }>
-            { initialData &&
-            <RequestForm initialValues={ initialData } customers={ customers } transporters={ transporters }/> }
+            footer={null}>
+            <RequestForm initialValues={ initialData } customers={ customers } transporters={ transporters }
+                         onClose={ onModalClose } handleSubmit={ handleSubmit }
+            />
         </Modal>
     )
 }
@@ -52,20 +52,19 @@ const RequestModalForm = (props) => {
 const RequestForm = (props) => {
     const [form] = Form.useForm()
 
-    const { initialValues, customers, transporters } = props
-
-    useEffect(() => form.resetFields(), [initialValues, form]);
+    const { initialValues, customers, transporters, onClose, handleSubmit } = props
 
     const worker = {
         ...initialValues,
-        loading_date: initialValues.loading_date && moment(initialValues.loading_date, "YYYY-MM-DD"),
-        unloading_date: initialValues.unloading_date && moment(initialValues.unloading_date, "YYYY-MM-DD"),
-        customer: initialValues.customer && initialValues.customer.id,
-        transporter: initialValues.transporter && initialValues.transporter.id
+        loading_date: initialValues && moment(initialValues.loading_date, "YYYY-MM-DD"),
+        unloading_date: initialValues && moment(initialValues.unloading_date, "YYYY-MM-DD"),
+        customer: initialValues && initialValues.customer.id,
+        transporter: initialValues && initialValues.transporter.id
     }
 
     return (
-        <Form layout="vertical" initialValues={ worker } form={ form }>
+        <Form layout="vertical" initialValues={ worker } form={ form } preserve={ false } onFinish={ handleSubmit }>
+            <Form.Item hidden name="id"/>
             <Row>
                 <Col span={ 6 }>
                     <Form.Item label="№" name="number">
@@ -76,7 +75,7 @@ const RequestForm = (props) => {
             <Row gutter={ 16 }>
                 <Col span={ 12 }>
                     <Form.Item label="Заказчик" name="customer">
-                        <Select style={ { width: "100%" } }>
+                        <Select style={ { width: "100%" } } >
                             { customers && customers.map(item => (
                                 <Option key={ item.id } value={ item.id }>{ item.name }</Option>
                             )) }
@@ -123,6 +122,18 @@ const RequestForm = (props) => {
                     </Form.Item>
                 </Col>
             </Row>
+            <Row>
+                <Col span={ 24 } style={ { textAlign: "right" } }>
+                    <Form.Item>
+                        <Button key="submit" type="primary" htmlType="submit">
+                            Сохранить
+                        </Button>,
+                        <Button key="cancel" htmlType="button" onClick={ () => onClose() }>
+                            Отмена
+                        </Button>
+                    </Form.Item>
+                </Col>
+            </Row>
         </Form>
     )
 }
@@ -131,4 +142,4 @@ const mapStateToProps = state => ({
     initialData: state.requests.selectedRequest
 })
 
-export default connect(mapStateToProps, { closeFormModal, clearSelectedRequest })(RequestModalForm)
+export default connect(mapStateToProps, { closeFormModal, clearSelectedRequest, saveRequest })(RequestModalForm)

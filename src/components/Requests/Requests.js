@@ -52,7 +52,7 @@ const Requests = (props) => {
 
             <RequestsTable data={ tableData } loading={ tableLoading }/>
 
-            { selectedRequest &&
+            { showFormModal &&
             <RequestModalForm visible={ showFormModal } initialData={ selectedRequest } title={ formModalTitle }/> }
 
             { selectedRequest &&
