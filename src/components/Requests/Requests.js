@@ -1,160 +1,84 @@
 import { useEffect, useState } from "react"
-import { Button, Space, Table, Modal, Form, Input, DatePicker, Row, Col, Select } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons"
+import { Button } from "antd";
 import MainLayout from "../MainLayout/MainLayout";
+import ConfirmModal from "../UI/ConfirmModal";
+import RequestsTable from "./Table";
+import { connect } from "react-redux";
+import { clearSelectedRequest, deleteRequest, fetchRequestsSuccess } from "../../redux/actions/requestsActions";
+import RequestModalForm from "./Form";
+import { closeDeleteConfirmModal, openFormModal } from "../../redux/actions/modalsActions";
+import { getRequests } from "../../services/requestsService";
 
-const { Column } = Table
-const { Option } = Select
-
-const Requests = () => {
+const Requests = (props) => {
     const [title] = useState("Журнал заявок")
-    const [loading, setLoading] = useState(false)
-    const [data, setData] = useState([])
-    const [modalFormVisible, setModalFormVisible] = useState(false)
-    const [modelConfirmVisible, setModalConfirmVisible] = useState(false)
+    const [tableLoading, setTableLoading] = useState(false)
+    const [tableData, setTableData] = useState([])
+
+    const {
+        showDeleteConfirmModal, showFormModal, openFormModal, selectedRequest, formModalTitle,
+        deleteRequest, clearSelectedRequest, closeDeleteConfirmModal, requests, fetchRequestsSuccess
+    } = props
+
+    useEffect(() => {
+        setTableLoading(true)
+        getRequests().then(data => {
+            fetchRequestsSuccess(data)
+            setTableLoading(false)
+        })
+    }, [])
+
+    useEffect(() => {
+        setTableData(requests)
+    }, [requests])
 
     useEffect(() => {
         document.title = title
     }, [title])
-    useEffect(() => {
-        setLoading(true)
-        fetch("http://localhost:8000/api/requests/")
-            .then(res => res.json())
-            .then(data => {
-                setData(data)
-                setLoading(false)
-            })
-    }, [])
+
+    const handleDelete = () => {
+        deleteRequest(selectedRequest)
+        closeDeleteConfirmModal()
+    }
+
+    const handleDeleteConfirmModalClose = () => {
+        clearSelectedRequest()
+        closeDeleteConfirmModal()
+    }
 
     return (
         <MainLayout title={ title }>
             <Button style={ { marginBottom: "0.5rem", backgroundColor: "lime" } }
-                    onClick={ () => setModalFormVisible(true) }>Добавить</Button>
-            <Table bordered dataSource={ data.map(item => ({ ...item, key: item.id })) } loading={ loading }
-                   size="small">
-                <Column title="№" dataIndex="number" key="number"/>
-                <Column title="Дата загрузки" dataIndex="loading_date" key="loading_date"/>
-                <Column title="Адрес загрузки" dataIndex="loading_address" key="loading_address"/>
-                <Column title="Дата выгрузки" dataIndex="unloading_date" key="unloading_date"/>
-                <Column title="Адрес выгрузки" dataIndex="unloading_address" key="unloading_address"/>
-                <Column title="Заказчик" dataIndex="customer" key="customer" render={ record => (
-                    <span>{ record.name }</span>
-                ) }/>
-                <Column title="Перевозчик" dataIndex="transporter" key="transporter" render={ record => (
-                    <span>{ record.name }</span>
-                ) }/>
-                <Column title="Ставка (зак.)" dataIndex="customer_rate" key="customer_rate"/>
-                <Column title="Ставка (пер.)" dataIndex="transporter_rate" key="transporter_rate"/>
-                <Column key="actions" render={ (text, record) => (
-                    <Space size="large">
-                        <Button type="text" icon={ <EditOutlined/> }
-                                style={ { backgroundColor: "gold", color: "black" } }
-                                onClick={ () => setModalFormVisible(true) }
-                        />
-                        <Button type="text" icon={ <DeleteOutlined/> }
-                                style={ { backgroundColor: "red", color: "black" } }
-                                onClick={ () => setModalConfirmVisible(true) }
-                        />
-                    </Space>) }/>
-            </Table>
+                    onClick={ () => openFormModal("Создание новой заявки") }>Добавить</Button>
 
-            <Modal
-                centered
-                visible={ modalFormVisible }
-                title="Форма"
-                onCancel={ () => setModalFormVisible(false) }
-                footer={ [
-                    <Button key="submit" type="primary">
-                        Сохранить
-                    </Button>,
-                    <Button key="cancel" onClick={ () => setModalFormVisible(false) }>
-                        Отмена
-                    </Button>
-                ] }>
-                <Form layout="vertical">
-                    <Row>
-                        <Col span={ 6 }>
-                            <Form.Item label="№">
-                                <Input/>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={ 16 }>
-                        <Col span={ 12 }>
-                            <Form.Item label="Заказчик">
-                                <Select style={ { width: "100%" } }>
-                                    <Option value="jack">Jack</Option>
-                                    <Option value="lucy">Lucy</Option>
-                                    <Option value="disabled" disabled>
-                                        Disabled
-                                    </Option>
-                                    <Option value="Yiminghe">yiminghe</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={ 12 }>
-                            <Form.Item label="Перевозчик">
-                                <Select style={ { width: "100%" } }>
-                                    <Option value="jack">Jack</Option>
-                                    <Option value="lucy">Lucy</Option>
-                                    <Option value="disabled" disabled>
-                                        Disabled
-                                    </Option>
-                                    <Option value="Yiminghe">yiminghe</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={ 16 }>
-                        <Col span={ 12 }>
-                            <Form.Item label="Дата загрузки">
-                                <DatePicker style={ { width: "100%" } }/>
-                            </Form.Item>
-                        </Col>
-                        <Col span={ 12 }>
-                            <Form.Item label="Дата выгрузки">
-                                <DatePicker style={ { width: "100%" } }/>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Form.Item label="Адрес загрузки">
-                        <Input/>
-                    </Form.Item>
-                    <Form.Item label="Адрес выгрузки">
-                        <Input/>
-                    </Form.Item>
-                    <Row gutter={ 16 }>
-                        <Col span={ 12 }>
-                            <Form.Item label="Ставка (зак.)">
-                                <Input/>
-                            </Form.Item>
-                        </Col>
-                        <Col span={ 12 }>
-                            <Form.Item label="Ставка (пер.)">
-                                <Input/>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                </Form>
-            </Modal>
+            <RequestsTable data={ tableData } loading={ tableLoading }/>
 
-            <Modal
-                visible={ modelConfirmVisible }
-                centered
-                title="Удаление заявки"
-                onCancel={ () => setModalConfirmVisible(false) }
-                footer={ [
-                    <Button key="submit" type="primary" onClick={() => console.log()}>
-                        Сохранить
-                    </Button>,
-                    <Button key="cancel" onClick={ () => setModalConfirmVisible(false) }>
-                        Отмена
-                    </Button>
-                ] }>
-                <p>Вы действительно хотите удалить заявку?</p>
-            </Modal>
+            { selectedRequest &&
+            <RequestModalForm visible={ showFormModal } initialData={ selectedRequest } title={ formModalTitle }/> }
+
+            { selectedRequest &&
+            <ConfirmModal visible={ showDeleteConfirmModal } title={ `Удаление заявки № ${ selectedRequest.number }` }
+                          onSubmit={ handleDelete }
+                          onClose={ handleDeleteConfirmModalClose }>
+                <p>Вы действительно хотите удалить заявку
+                    № <b>{ selectedRequest && selectedRequest.number }</b>?</p>
+            </ConfirmModal> }
+
         </MainLayout>
     )
 }
 
-export default Requests
+const mapStateToProps = state => ({
+    requests: state.requests.requestsList,
+    showDeleteConfirmModal: state.modals.showDeleteConfirmModal,
+    showFormModal: state.modals.showFormModal,
+    formModalTitle: state.modals.formModalTitle,
+    selectedRequest: state.requests.selectedRequest
+})
+
+export default connect(mapStateToProps, {
+    clearSelectedRequest,
+    openFormModal,
+    deleteRequest,
+    closeDeleteConfirmModal,
+    fetchRequestsSuccess
+})(Requests)

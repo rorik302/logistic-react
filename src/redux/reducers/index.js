@@ -2,13 +2,13 @@ import { combineReducers } from "redux";
 import { companyTypesReducer } from "./companyTypesReducer";
 import { paymentTermsReducer } from "./paymentTermsReducer";
 import { contractorsReducer } from "./contractorsReducer";
-import { reducer as formReducer } from 'redux-form'
-import { reducer as modal } from 'redux-modal'
+import { modalsReducer } from "./modals";
+import { requestsReducer } from "./requestsReducer";
 
 export const rootReducer = combineReducers({
-    form: formReducer,
-    modal,
+    modals: modalsReducer,
     companyTypes: companyTypesReducer,
     paymentTerms: paymentTermsReducer,
-    contractors: contractorsReducer
+    contractors: contractorsReducer,
+    requests: requestsReducer
 })
