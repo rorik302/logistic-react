@@ -1,3 +1,14 @@
 main {
-    padding: 1rem 0;
+    padding: 1rem;
+}
+header {
+    padding: 0 50px;
+    background-color: #fff;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    border-bottom: 1px solid #e0e0e0;
+}
+main.ant-layout-content .ant-card {
+    margin-top: 3rem;
 }

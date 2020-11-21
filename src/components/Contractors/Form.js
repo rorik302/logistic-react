@@ -8,10 +8,13 @@ import { connect } from "react-redux";
 import { getAllCompanyTypes } from "../../redux/actions/companyTypesActions";
 import { clear, save } from "../../redux/actions/contractorsActions";
 import { Dropdown } from "primereact/dropdown";
+import { Select } from "antd";
+import { Option } from "antd/es/mentions";
 
 const ContractorForm = (props) => {
     const [title, setTitle] = useState("Создание контрагента")
     const [companyTypes, setCompanyTypes] = useState([])
+    const [form, setForm] = useState({})
     const { show, dialogType, handleSubmit, handleHide, getAllCompanyTypes, companyTypesList, clear, save } = props
 
     useEffect(() => {
@@ -74,10 +77,11 @@ const Form = (props) => {
                 </div>
             </div>
             <div className="p-fluid p-formgrid p-grid">
-                <div className="p-field p-col-4 p-pl-0">
-                    <label>ОПФ</label>
-                    <Field component={ CompanyTypesDropdown } options={ companyTypes } name="companyType"/>
-                </div>
+                <Select>
+                    { companyTypes && companyTypes.map(item => (
+                        <Option value={ JSON.stringify(item) }>{ item.nameShort }</Option>
+                    ))}
+                </Select>
                 <div className="p-field p-col-8 p-pr-0">
                     <label>Наименование</label>
                     <Field component="input" className="p-inputtext" name="name"/>

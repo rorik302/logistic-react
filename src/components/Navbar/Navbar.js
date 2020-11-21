@@ -1,19 +1,17 @@
-import { withRouter } from "react-router-dom"
-import { Menubar } from "primereact/menubar";
+import './Navbar.css'
+import { Menu } from "antd";
+import { Link } from "react-router-dom";
 
-const Navbar = (props) => {
-    const items = [
-        { label: "Контрагенты", icon: "pi pi-fw pi-users", command: () => { props.history.push("/contractors/") } },
-        {
-            label: "Справочники", icon: "pi pi-fw pi-briefcase", items: [
-                { label: "Правовые формы", command: () => { props.history.push("/catalogs/company-types/") } },
-                { label: "Сроки оплат", command: () => { props.history.push("/catalogs/payment-terms/") } }
-            ]
-        }
-    ]
+const Navbar = () => {
     return (
-        <Menubar model={ items }/>
+        <nav className="navbar">
+            <Menu mode="horizontal">
+                <Menu.Item key="requests"><Link to="/requests/">Заявки</Link></Menu.Item>
+                <Menu.Item key="contractors"><Link to="/contractors/">Контрагенты</Link></Menu.Item>
+                <Menu.Item key="catalogs">Справочники</Menu.Item>
+            </Menu>
+        </nav>
     )
 }
 
-export default withRouter(Navbar)
+export default Navbar
