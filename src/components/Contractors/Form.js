@@ -1,14 +1,24 @@
+import { useState, useEffect } from "react"
 import { Modal, Form, Col, Row, Switch, Select, Input, Button } from "antd";
 import { connect } from "react-redux";
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import { clearSelectedContractor, contractorCreated, contractorUpdated } from "../../redux/actions/contractorsActions";
 import { closeFormModal } from "../../redux/actions/modalsActions";
 import ContractorsService from "../../services/contractorsService";
+import CompanyTypesService from "../../services/companyTypesService";
 
 const service = new ContractorsService()
+const companyTypesService = new CompanyTypesService()
+const { Option } = Select
 
 const ContractorModalForm = props => {
+    const [companyTypes, setCompanyTypes] = useState([])
     const { title, visible, initialData, clearSelectedContractor, closeFormModal, contractorUpdated, contractorCreated } = props
+
+    useEffect(() => {
+       companyTypesService.getCompanyTypes()
+           .then(data => setCompanyTypes(data))
+    }, [])
 
     const onModalClose = () => {
         clearSelectedContractor()
@@ -29,7 +39,8 @@ const ContractorModalForm = props => {
             visible={ visible }
             style={ { minWidth: "700px" } }
             footer={ null }>
-            <ContractorForm initialValues={ initialData } onClose={ onModalClose } handleSubmit={ handleSubmit }/>
+            <ContractorForm initialValues={ initialData } onClose={ onModalClose } handleSubmit={ handleSubmit }
+                            companyTypes={ companyTypes }/>
         </Modal>
     )
 }
@@ -37,7 +48,7 @@ const ContractorModalForm = props => {
 const ContractorForm = props => {
     const [form] = Form.useForm()
 
-    const { handleSubmit, initialValues, onClose } = props
+    const { handleSubmit, initialValues, onClose, companyTypes } = props
 
     const worker = {
         ...initialValues,
@@ -61,7 +72,9 @@ const ContractorForm = props => {
                 <Col span={ 6 }>
                     <Form.Item label="Правовая форма" name="type_of_company">
                         <Select style={ { width: "100%" } }>
-
+                            { companyTypes && companyTypes.map(item => (
+                                <Option key={ item.id } value={ item.id }>{ item.name_short }</Option>
+                            )) }
                         </Select>
                     </Form.Item>
                 </Col>

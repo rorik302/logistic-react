@@ -3,7 +3,8 @@ import {
     CONTRACTOR_SELECTED,
     CONTRACTOR_CLEARED,
     CONTRACTOR_DELETED,
-    CONTRACTOR_UPDATED
+    CONTRACTOR_UPDATED,
+    CONTRACTOR_CREATED
 } from "../actions/contractorsActions";
 
 const initialState = {
@@ -26,6 +27,15 @@ export const contractorsReducer = (state = initialState, { type, payload }) => {
         case CONTRACTOR_CLEARED:
             return {
                 ...state,
+                selectedContractor: initialState.selectedContractor
+            }
+        case CONTRACTOR_CREATED:
+            return {
+                ...state,
+                contractorsList: [
+                    ...state.contractorsList,
+                    payload
+                ],
                 selectedContractor: initialState.selectedContractor
             }
         case CONTRACTOR_UPDATED:
