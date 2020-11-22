@@ -7,5 +7,9 @@ export default class ContractorsService {
     getContractors = async () => {
         return await axios.get(BASE_URL + this.url).then(res => res.data)
     }
+
+    deleteContractor = async (item) => {
+        return await axios.delete(BASE_URL + this.url + item.id).then(res => res)
+    }
 }
 

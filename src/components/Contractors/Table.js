@@ -1,16 +1,21 @@
 import { Button, Space, Table as AntTable } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Table } from "../UI/Table";
+import { connect } from "react-redux";
+import { openDeleteConfirmModal } from "../../redux/actions/modalsActions";
+import { selectContractor } from "../../redux/actions/contractorsActions";
 
 const { Column } = AntTable
 
 const ContractorsTable = props => {
-    const { data, loading } = props
+    const { data, loading, selectContractor, openDeleteConfirmModal } = props
 
     const onEditBtnClick = record => {
     }
 
     const onDeleteBtnClick = record => {
+        selectContractor(record)
+        openDeleteConfirmModal()
     }
 
     return (
@@ -37,4 +42,4 @@ const ContractorsTable = props => {
     )
 }
 
-export default ContractorsTable
+export default connect(null, { selectContractor, openDeleteConfirmModal })(ContractorsTable)

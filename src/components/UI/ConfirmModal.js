@@ -6,7 +6,6 @@ const ConfirmModal = (props) => {
     const { children, visible, title, onSubmit, onClose } = props
 
     const handleClose = () => {
-        console.log('asdasdasd')
         onClose()
     }
 
