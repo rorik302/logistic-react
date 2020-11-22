@@ -19,7 +19,7 @@ export default class CompanyTypesService {
             return await axios.put(this.url + item.id + "/", item)
                 .then(res => res.data)
         } else {
-            return await axios.post(this.url)
+            return await axios.post(this.url, item).then(res => res.data)
         }
     }
 }

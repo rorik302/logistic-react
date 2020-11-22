@@ -1,14 +1,14 @@
 import { Modal, Form, Col, Row, Switch, Select, Input, Button } from "antd";
 import { connect } from "react-redux";
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
-import { clearSelectedContractor, contractorUpdated } from "../../redux/actions/contractorsActions";
+import { clearSelectedContractor, contractorCreated, contractorUpdated } from "../../redux/actions/contractorsActions";
 import { closeFormModal } from "../../redux/actions/modalsActions";
 import ContractorsService from "../../services/contractorsService";
 
 const service = new ContractorsService()
 
 const ContractorModalForm = props => {
-    const { title, visible, initialData, clearSelectedContractor, closeFormModal, contractorUpdated } = props
+    const { title, visible, initialData, clearSelectedContractor, closeFormModal, contractorUpdated, contractorCreated } = props
 
     const onModalClose = () => {
         clearSelectedContractor()
@@ -17,7 +17,7 @@ const ContractorModalForm = props => {
 
     const handleSubmit = values => {
         service.saveContractor(values)
-            .then(data => contractorUpdated(data))
+            .then(data => values.id ? contractorUpdated(data) : contractorCreated(data))
             .finally(() => closeFormModal())
     }
 
@@ -97,4 +97,9 @@ const ContractorForm = props => {
     )
 }
 
-export default connect(null, { clearSelectedContractor, closeFormModal, contractorUpdated })(ContractorModalForm)
+export default connect(null, {
+    clearSelectedContractor,
+    closeFormModal,
+    contractorUpdated,
+    contractorCreated
+})(ContractorModalForm)

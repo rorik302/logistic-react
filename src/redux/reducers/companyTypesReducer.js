@@ -3,7 +3,7 @@ import {
     COMPANY_TYPE_SELECTED,
     COMPANY_TYPE_CLEARED,
     COMPANY_TYPE_DELETED,
-    COMPANY_TYPE_UPDATED
+    COMPANY_TYPE_UPDATED, COMPANY_TYPE_CREATED
 } from "../actions/companyTypesActions";
 
 const initialState = {
@@ -32,6 +32,15 @@ export const companyTypesReducer = (state = initialState, { type, payload }) => 
             return {
                 ...state,
                 companyTypesList: state.companyTypesList.filter(item => item.id !== payload.id),
+                selectedCompanyType: initialState.selectedCompanyType
+            }
+        case COMPANY_TYPE_CREATED:
+            return {
+                ...state,
+                companyTypesList: [
+                    ...state.companyTypesList,
+                    payload
+                ],
                 selectedCompanyType: initialState.selectedCompanyType
             }
         case COMPANY_TYPE_UPDATED:

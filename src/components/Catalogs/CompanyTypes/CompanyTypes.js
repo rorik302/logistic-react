@@ -26,6 +26,7 @@ const CompanyTypes = props => {
     } = props
 
     useEffect(() => {
+        document.title = title
         setTableLoading(true)
         service.getCompanyTypes()
             .then(data => fetchCompanyTypesSuccess(data))

@@ -2,12 +2,16 @@ import { Modal, Form, Col, Row, Input, Button } from "antd";
 import { connect } from "react-redux";
 import { closeFormModal } from "../../../redux/actions/modalsActions";
 import CompanyTypesService from "../../../services/companyTypesService";
-import { clearSelectedCompanyType, companyTypeUpdated } from "../../../redux/actions/companyTypesActions";
+import {
+    clearSelectedCompanyType,
+    companyTypeCreated,
+    companyTypeUpdated
+} from "../../../redux/actions/companyTypesActions";
 
 const service = new CompanyTypesService()
 
 const CompanyTypeModalForm = props => {
-    const { title, visible, initialData, closeFormModal, clearSelectedCompanyType, companyTypeUpdated } = props
+    const { title, visible, initialData, closeFormModal, clearSelectedCompanyType, companyTypeUpdated, companyTypeCreated } = props
 
     const onModalClose = () => {
         clearSelectedCompanyType()
@@ -16,7 +20,7 @@ const CompanyTypeModalForm = props => {
 
     const handleSubmit = values => {
         service.saveCompanyType(values)
-            .then(data => companyTypeUpdated(data))
+            .then(data => values.id ? companyTypeUpdated(data) : companyTypeCreated(data))
             .finally(() => closeFormModal())
     }
 
@@ -70,4 +74,4 @@ const CompanyTypeForm = props => {
     )
 }
 
-export default connect(null, { clearSelectedCompanyType, closeFormModal, companyTypeUpdated })(CompanyTypeModalForm)
+export default connect(null, { clearSelectedCompanyType, closeFormModal, companyTypeUpdated, companyTypeCreated })(CompanyTypeModalForm)
