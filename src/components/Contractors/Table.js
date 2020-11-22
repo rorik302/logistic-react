@@ -1,47 +1,40 @@
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import { Button } from "primereact/button";
-import { show } from "redux-modal";
-import { connect } from "react-redux";
-import { select } from "../../redux/actions/contractorsActions";
+import { Button, Space, Table as AntTable } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Table } from "../UI/Table";
 
-const ContractorsTable = (props) => {
-    const { data, show, select } = props
+const { Column } = AntTable
 
-    const onEdit = (rowData) => {
-        select(rowData)
-        show("ContractorFormDialog", { dialogType: "edit" })
-    }
-    const onDelete = (rowData) => {
-        select(rowData)
-        show("ContractorDeleteDialog", { item: rowData })
+const ContractorsTable = props => {
+    const { data, loading } = props
+
+    const onEditBtnClick = record => {
     }
 
-    const isCustomerBodyTemplate = (rowData) => {
-        return <span>{ rowData.isCustomer && "✔" }</span>;
+    const onDeleteBtnClick = record => {
     }
-    const isTransporterBodyTemplate = (rowData) => {
-        return <span>{ rowData.isTransporter && "✔" }</span>;
-    }
-    const actionBodyTemplate = (rowData) => (
-        <>
-            <Button label="Редактировать" icon="pi pi-pencil" className="p-button-sm p-button-warning"
-                    onClick={ () => onEdit(rowData) }/>
-            <Button label="Удалить" icon="pi pi-trash" className="p-button-sm p-button-danger p-ml-2"
-                    onClick={ () => onDelete(rowData) }/>
-        </>
-    )
 
     return (
-        <DataTable value={ data } className="p-datatable-hoverable-rows p-datatable-striped p-datatable-sm">
-            <Column header="Заказчик" body={ isCustomerBodyTemplate }/>
-            <Column header="Перевозчик" body={ isTransporterBodyTemplate }/>
-            <Column field="name" header="Наименование"/>
-            <Column field="inn" header="ИНН"/>
-            <Column field="address" header="Адрес"/>
-            <Column body={ actionBodyTemplate }/>
-        </DataTable>
+        <Table data={ data } loading={ loading }>
+            <Column title="Тип" key="type" render={ record => (
+                <span>{ record.is_customer && record.is_transporter ? "Заказчик / Перевозчик" :
+                    record.is_customer ? "Заказчик" : record.is_transporter ? "Перевозчик" : null }</span>
+            ) }/>
+            <Column title="Наименование" dataIndex="name" key="name"/>
+            <Column title="ИНН" dataIndex="inn" key="inn"/>
+            <Column title="Адрес" dataIndex="address" key="address"/>
+            <Column key="actions" render={ (record) => (
+                <Space size="large">
+                    <Button type="text" icon={ <EditOutlined/> }
+                            style={ { backgroundColor: "gold", color: "black" } }
+                            onClick={ () => onEditBtnClick(record) }
+                    />
+                    <Button type="text" icon={ <DeleteOutlined/> }
+                            style={ { backgroundColor: "red", color: "black" } }
+                            onClick={ () => onDeleteBtnClick(record) }
+                    />
+                </Space>) }/>
+        </Table>
     )
 }
 
-export default connect(null, { show, select })(ContractorsTable)
+export default ContractorsTable

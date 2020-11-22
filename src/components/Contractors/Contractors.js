@@ -1,40 +1,42 @@
 import { useState, useEffect } from "react"
 import MainLayout from "../MainLayout/MainLayout";
-import ContractorsToolbar from "./Toolbar";
+import { Button } from "antd";
 import ContractorsTable from "./Table";
-import { fetchAll } from "../../redux/actions/contractorsActions";
 import { connect } from "react-redux";
-import ContractorDeleteDialog from "./DeleteDialog";
-import ContractorForm from "./Form";
+import ContractorsService from "../../services/contractorsService";
+import { fetchContractorsSuccess } from "../../redux/actions/contractorsActions";
 
-const Contractors = (props) => {
-    const [showForm, setShowForm] = useState(false)
-    const { fetchAll, contractorsList, deleteDialog, formDialog } = props
-    const title = "Контрагенты"
+const service = new ContractorsService()
+
+const Contractors = props => {
+    const title = "Журнал контрагентов"
+    const [tableData, setTableData] = useState([])
+    const [tableLoading, setTableLoading] = useState(false)
+
+    const { contractors, fetchContractorsSuccess } = props
 
     useEffect(() => {
-        document.title = title
-        fetchAll()
+        setTableLoading(true)
+        service.getContractors().then(data => {
+            fetchContractorsSuccess(data)
+            setTableLoading(false)
+        })
     }, [])
 
     useEffect(() => {
-        setShowForm(!showForm)
-    }, [formDialog])
+        setTableData(contractors)
+    }, [contractors])
 
     return (
         <MainLayout title={ title }>
-            <ContractorsToolbar/>
-            <ContractorsTable data={ contractorsList }/>
-            { deleteDialog && <ContractorDeleteDialog/> }
-            { showForm && <ContractorForm/> }
+            <Button style={ { marginBottom: "0.5rem", backgroundColor: "lime" } }>Добавить</Button>
+            <ContractorsTable data={ tableData } loading={ tableLoading }/>
         </MainLayout>
     )
 }
 
-const mapStateToProps = (state) => ({
-    contractorsList: state.contractors.contractorsList,
-    formDialog: state.modal.ContactorFormDialog,
-    deleteDialog: state.modal.ContractorDeleteDialog
+const mapStateToProps = state => ({
+    contractors: state.contractors.contractorsList
 })
 
-export default connect(mapStateToProps, { fetchAll })(Contractors)
+export default connect(mapStateToProps, { fetchContractorsSuccess })(Contractors)
