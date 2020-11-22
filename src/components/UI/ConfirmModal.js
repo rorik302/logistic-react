@@ -16,8 +16,8 @@ const ConfirmModal = (props) => {
             title={ title }
             closable={ false }
             footer={ [
-                <Button key="submit" type="primary" onClick={ () => onSubmit() }>
-                    Сохранить
+                <Button key="submit" type="text" onClick={ () => onSubmit() } style={ { backgroundColor: "red", color: "white" } }>
+                    Удалить
                 </Button>,
                 <Button key="cancel" onClick={ () => handleClose() }>
                     Отмена
