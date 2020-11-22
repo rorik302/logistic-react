@@ -1,4 +1,10 @@
-import { FETCH_CONTRACTORS_SUCCESS, CONTRACTOR_SELECTED, CONTRACTOR_CLEARED, CONTRACTOR_DELETED } from "../actions/contractorsActions";
+import {
+    FETCH_CONTRACTORS_SUCCESS,
+    CONTRACTOR_SELECTED,
+    CONTRACTOR_CLEARED,
+    CONTRACTOR_DELETED,
+    CONTRACTOR_UPDATED
+} from "../actions/contractorsActions";
 
 const initialState = {
     contractorsList: [],
@@ -20,6 +26,12 @@ export const contractorsReducer = (state = initialState, { type, payload }) => {
         case CONTRACTOR_CLEARED:
             return {
                 ...state,
+                selectedContractor: initialState.selectedContractor
+            }
+        case CONTRACTOR_UPDATED:
+            return {
+                ...state,
+                contractorsList: state.contractorsList.map(item => item.id === payload.id ? { ...payload } : item),
                 selectedContractor: initialState.selectedContractor
             }
         case CONTRACTOR_DELETED:
