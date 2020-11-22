@@ -6,6 +6,7 @@ import { Switch, Route } from "react-router-dom"
 import MainLayout from "../MainLayout/MainLayout";
 import Requests from "../Requests/Requests";
 import Contractors from "../Contractors/Contractors";
+import CompanyTypes from "../Catalogs/CompanyTypes/CompanyTypes";
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
             <Switch>
                 <Route path="/requests/" component={ Requests }/>
                 <Route path="/contractors/" component={ Contractors }/>
+                <Route path="/catalogs/company-types/" component={ CompanyTypes }/>
                 <Route path="/" component={ MainLayout }/>
             </Switch>
         </ConfigProvider>
