@@ -4,8 +4,11 @@ import moment from "moment";
 import { connect } from "react-redux";
 import { closeFormModal } from "../../redux/actions/modalsActions";
 import { clearSelectedRequest, saveRequest } from "../../redux/actions/requestsActions";
+import ContractorsService from "../../services/contractorsService";
 
 const { Option } = Select
+
+const contractorsService = new ContractorsService()
 
 const RequestModalForm = (props) => {
     const [customers, setCustomers] = useState([])
@@ -14,13 +17,13 @@ const RequestModalForm = (props) => {
     const { visible, initialData, closeFormModal, clearSelectedRequest, title, saveRequest } = props
 
     useEffect(() => {
-        fetch("http://localhost:8000/api/companies/")
-            .then(res => res.json())
+        contractorsService.getContractors()
             .then(data => {
-                    setCustomers(data.filter(item => item.is_customer))
-                    setTransporters(data.filter(item => item.is_transporter))
-                }
-            )
+                const customers = data.map(item => item.is_customer ? item : null)
+                const transporters = data.map(item => item.is_transporter ? item : null)
+                setCustomers(customers)
+                setTransporters(transporters)
+            })
     }, [])
 
     const handleSubmit = values => {
@@ -77,7 +80,7 @@ const RequestForm = (props) => {
                     <Form.Item label="Заказчик" name="customer">
                         <Select style={ { width: "100%" } } >
                             { customers && customers.map(item => (
-                                <Option key={ item.id } value={ item.id }>{ item.name }</Option>
+                                item && <Option key={ item.id } value={ item.id }>{ item.name }</Option>
                             )) }
                         </Select>
                     </Form.Item>
