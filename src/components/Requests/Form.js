@@ -89,7 +89,7 @@ const RequestForm = (props) => {
                     <Form.Item label="Перевозчик" name="transporter">
                         <Select style={ { width: "100%" } }>
                             { transporters && transporters.map(item => (
-                                <Option key={ item.id } value={ item.id }>{ item.name }</Option>
+                                item && <Option key={ item.id } value={ item.id }>{ item.name }</Option>
                             )) }
                         </Select>
                     </Form.Item>
