@@ -7,6 +7,7 @@ import MainLayout from "../MainLayout/MainLayout";
 import Requests from "../Requests/Requests";
 import Contractors from "../Contractors/Contractors";
 import CompanyTypes from "../Catalogs/CompanyTypes/CompanyTypes";
+import Login from "../Login/Login";
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
                 <Route path="/requests/" component={ Requests }/>
                 <Route path="/contractors/" component={ Contractors }/>
                 <Route path="/catalogs/company-types/" component={ CompanyTypes }/>
+                <Route path="/login/" component={ Login }/>
                 <Route path="/" component={ MainLayout }/>
             </Switch>
         </ConfigProvider>

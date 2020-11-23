@@ -1,3 +1,7 @@
+.navbar {
+    display: flex;
+    align-items: center;
+}
 .navbar .ant-menu-horizontal {
     border-bottom: none;
 }
